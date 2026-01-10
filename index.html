@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sunny AI Shift</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f5f5;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+header {
+  background: #004d40;
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+}
+main {
+  flex: 1;
+  max-width: 800px;
+  margin: 1rem auto;
+  width: 95%;
+}
+.instructions {
+  background: #e0f2f1;
+  border-left: 4px solid #00796b;
+  padding: 1rem;
+}
+#chatContainer {
+  background: white;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+}
+#messages {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+.msg {
+  margin-bottom: .75rem;
+}
+textarea {
+  border: none;
+  border-top: 1px solid #ddd;
+  padding: .75rem;
+  resize: none;
+}
+button {
+  background: #00695c;
+  color: white;
+  border: none;
+  padding: .75rem;
+  cursor: pointer;
+}
+button:disabled {
+  background: #999;
+}
+footer {
+  text-align: center;
+  font-size: .85rem;
+  padding: 1rem;
+  background: #fafafa;
+}
+</style>
+</head>
+
+<body>
+<header>
+  <h1>Positive-Flip</h1>
+</header>
+
+<main>
+<section class="instructions">
+  <strong>How to use:</strong>
+  <ol>
+    <li>Type a negative or harsh statement</li>
+    <li>Press Send</li>
+    <li>Get a positive rewrite</li>
+  </ol>
+</section>
+
+<section id="chatContainer">
+  <div id="messages"></div>
+  <textarea id="userInput" rows="2"
+    placeholder="Type something negative…"></textarea>
+  <button id="sendBtn">Send</button>
+</section>
+</main>
+
+<footer>
+© 2026 Fluxpuls — AI powered positivity demo
+</footer>
+
+<script>
+const API_URL = "https://positive-ai.yourname.workers.dev"; // ← CHANGE THIS
+
+const btn = document.getElementById("sendBtn");
+const input = document.getElementById("userInput");
+const messages = document.getElementById("messages");
+
+function addMessage(author, text) {
+  const div = document.createElement("div");
+  div.className = "msg";
+  div.textContent = `${author}: ${text}`;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+async function sendMessage() {
+  const text = input.value.trim();
+  if (!text) return;
+
+  addMessage("You", text);
+  input.value = "";
+  btn.disabled = true;
+  btn.textContent = "Thinking…";
+
+  try {
+    const resp = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: text })
+    });
+
+    if (!resp.ok) throw new Error("Network error");
+
+    const data = await resp.json();
+
+    let reply = "No response.";
+    if (Array.isArray(data)) {
+      reply = data[0]?.generated_text || reply;
+    } else if (data.generated_text) {
+      reply = data.generated_text;
+    }
+
+    addMessage("Assistant", reply);
+
+  } catch (e) {
+    addMessage(
+      "Assistant",
+      "⚠️ AI service unavailable. Please try again later."
+    );
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Send";
+    input.focus();
+  }
+}
+
+btn.onclick = sendMessage;
+input.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.ctrlKey) sendMessage();
+});
+</script>
+</body>
+</html>
