@@ -4,149 +4,79 @@
 <meta charset="UTF-8">
 <title>Positive‑Flip AI Demo</title>
 <style>
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-    max-width: 800px;
-    margin: 2rem auto;
-    line-height: 1.6;
-    color: #333;
-    padding: 0 1rem;
-    background: #f9fbfd;
+  body {font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9;}
+  .container {max-width:800px; margin:auto; padding:20px;}
+  h1 {text-align:center; color:#333;}
+  .card {
+    background:#fff; border-radius:8px; padding:20px;
+    box-shadow:0 2px 6px rgba(0,0,0,.1); margin-top:20px;
   }
-  h1 { text-align: center; margin-bottom: 0.5rem; }
-
-  /* ----- Instruction box ----- */
-  .instructions {
-    background: #e8f4ff;
-    border-left: 6px solid #0066ff;
-    padding: 1rem;
-    margin: 1.5rem 0;
+  .copy-btn {
+    background:#0066ff; color:#fff; border:none; border-radius:4px;
+    padding:6px 12px; cursor:pointer; font-size:0.9rem;
+    float:right;
   }
-  .instructions ol { margin-left: 1.2rem; }
-
-  /* ----- Prompt box ----- */
-  .prompt-box {
-    background: #f4f9ff;
-    border-left: 6px solid #0066ff;
-    padding: 0.9rem;
-    margin: 0.9rem 0;
-    position: relative;
-    font-family: inherit;
+  .copy-btn:hover {background:#0052cc;}
+  pre {
+    background:#f0f0f0; padding:12px; border-radius:4px;
+    overflow-x:auto; white-space:pre-wrap; word-break:break-word;
+    margin:0 0 10px 0;
   }
-  .prompt-box textarea {
-    width: 100%;
-    height: 6em;
-    resize: none;
-    border: none;
-    background: transparent;
-    font-family: inherit;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    color: #000;
-    outline: none;
+  .free-chat {
+    display:block; width:100%; text-align:center;
+    background:#0066ff; color:#fff; text-decoration:none;
+    padding:12px 0; border-radius:4px; margin-top:15px;
   }
-
-  /* ----- Input form ----- */
-  .input-form textarea {
-    width: 100%;
-    min-height: 4em;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid #bbb;
-    border-radius: 4px;
-    margin-top: 0.5rem;
+  .footer {
+    text-align:center; font-size:0.85rem; color:#777;
+    margin-top:30px; padding-bottom:20px;
   }
-  .input-form button {
-    margin-top: 0.5rem;
-    background: #0066ff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  .input-form button:hover { background: #004ecc; }
-
-  /* ----- Free‑Chat button ----- */
-  .chat-btn {
-    display: block;
-    width: 100%;
-    max-width: 300px;
-    margin: 1.5rem auto;
-    padding: 0.8rem 1.2rem;
-    background-color: #0066ff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1.1rem;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-  }
-  .chat-btn:hover { background-color: #004ecc; }
-
-  /* ----- Footer & disclaimer ----- */
-  footer {
-    margin-top: 2rem;
-    font-size: 0.85rem;
-    text-align: center;
-    color: #777;
-    line-height: 1.4;
-  }
-  .disclaimer {
-    font-size: 0.78rem;
-    color: #555;
-    background: #fafafa;
-    border-left: 4px solid #ff9900;
-    padding: 0.6rem;
-    margin: 1rem 0;
-    display: inline-block;
-    text-align: left;
-    max-width: 100%;
-  }
+  .disclaimer {font-size:0.75rem; color:#555; margin-top:15px;}
 </style>
+<script>
+  function copyPrompt() {
+    const el = document.getElementById('promptText');
+    navigator.clipboard.writeText(el.textContent.trim())
+      .then(() => alert('Prompt copied to clipboard!'))
+      .catch(() => alert('Failed to copy. Please select manually.'));
+  }
+</script>
 </head>
 
 <body>
-<h1>Positive‑Flip AI Demo</h1>
+<div class="container">
+  <h1>Positive‑Flip AI Demo</h1>
 
-<!-- Instructions -->
-<div class="instructions">
-  <strong>How to use:</strong>
-  <ol>
-    <li>Read the prompt below and copy it (select the text and press <kbd>Ctrl +C</kbd>).</li>
-    <li>Open the “Free Chat” link – it loads OpenAI’s public ChatGPT UI.</li>
-    <li>Paste the copied prompt into the chat window and press Enter.</li>
-    <li>Now type a negative or harsh statement and send it – the AI will return a positive rewrite.</li>
-  </ol>
-</div>
+  <div class="card">
+    <strong>How to use:</strong>
+    <ol>
+      <li>Read the prompt below and copy it (click the <em>Copy</em> button).</li>
+      <li>Open the “Free Chat” link – it loads OpenAI’s public ChatGPT UI.</li>
+      <li>Paste the copied prompt into the chat window and press <strong>Enter</strong>.</li>
+      <li>Now type a negative or harsh statement and send it – the AI will return a positive rewrite.</li>
+    </ol>
 
-<!-- Prompt you can copy -->
-<div class="prompt-box">
-  <textarea readonly>
-You are a positivity‑focused AI. Take the user’s negative or harsh statement and rewrite it as a short, uplifting, constructive sentence that keeps the original intent but flips the tone to positive. Do not add extra commentary—just return the rewritten sentence.
-  </textarea>
-</div>
+    <button class="copy-btn" onclick="copyPrompt()">Copy</button>
+    <pre id="promptText">
+You are a positivity‑focused AI. Take the user’s negative or harsh statement and rewrite it as a short,
+uplifting, constructive sentence that keeps the original intent but flips the tone to positive.
+Do not add extra commentary—just return the rewritten sentence.
+    </pre>
 
-<!-- Optional local form (does nothing without a back‑end) -->
-<form class="input-form" action="#" method="POST">
-  <label for="neg">Enter a negative statement:</label> 
-  <textarea id="neg" name="neg" placeholder="e.g., I always mess things up…" required></textarea> 
-  <button type="submit">Send</button>
-</form>
+    <a href="https://chat.openai.com/" target="_blank" class="free-chat">Free Chat (OpenAI)</a>
 
-<!-- Free‑Chat button -->
-<a href="https://chat.openai.com/" target="_blank" class="chat-btn">Free Chat (OpenAI)</a>
-
-<footer>
-  © 2026 Fluxpuls — Positivity Demo Powered by OpenAI
-  <div class="disclaimer">
-    <strong>Disclaimer:</strong> The AI replies are generated for experimental use only and may contain
-    inaccuracies, outdated information, or unintended bias. Do not rely on them for legal, medical,
-    financial, or safety‑critical decisions. Always verify important information with authoritative sources.
+    <div class="disclaimer">
+      <strong>Disclaimer:</strong> The AI replies are generated for experimental use only and may contain
+      inaccuracies, outdated information, or unintended bias. Do not rely on them for legal, medical,
+      financial, or safety‑critical decisions. Always verify important information with authoritative sources.
+        
+      This page is for educational/demo purposes only.
+    </div>
   </div>
-  This page is for educational/demo purposes only.
-</footer>
+
+  <div class="footer">
+    © 2026 Fluxpuls — Positivity Demo Powered by OpenAI
+  </div>
+</div>
 </body>
 </html>
