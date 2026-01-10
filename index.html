@@ -3,42 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <title>Positive‑Flip AI Demo</title>
+
+<!-- Inter font from Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet">
+
 <style>
-  body {font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9;}
-  .container {max-width:800px; margin:auto; padding:20px;}
-  h1 {text-align:center; color:#333;}
+  /* ----- Global styles ----- */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;               /* comfortable base size */
+    line-height: 1.5;
+    background: linear-gradient(to bottom right,
+                #e0f7fa, #b2ebf2); /* soft teal gradient */
+    color: #212121;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  h1 {
+    text-align: center;
+    color: #004d40;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  /* ----- Card ----- */
   .card {
-    background:#fff; border-radius:8px; padding:20px;
-    box-shadow:0 2px 6px rgba(0,0,0,.1); margin-top:20px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    margin-top: 24px;
   }
+
+  .card ol {
+    margin-left: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .card li {
+    margin-bottom: 0.4rem;
+  }
+
+  /* ----- Buttons ----- */
   .copy-btn {
-    background:#0066ff; color:#fff; border:none; border-radius:4px;
-    padding:6px 12px; cursor:pointer; font-size:0.9rem;
-    float:right;
+    background: #00796b;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: 500;
+    float: right;
+    transition: background .2s;
   }
-  .copy-btn:hover {background:#0052cc;}
-  pre {
-    background:#f0f0f0; padding:12px; border-radius:4px;
-    overflow-x:auto; white-space:pre-wrap; word-break:break-word;
-    margin:0 0 10px 0;
+
+  .copy-btn:hover {
+    background: #00695c;
   }
+
   .free-chat {
-    display:block; width:100%; text-align:center;
-    background:#0066ff; color:#fff; text-decoration:none;
-    padding:12px 0; border-radius:4px; margin-top:15px;
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: #009688;
+    color: #fff;
+    text-decoration: none;
+    padding: 14px 0;
+    border-radius: 6px;
+    margin-top: 18px;
+    font-weight: 500;
+    transition: background .2s;
   }
+
+  .free-chat:hover {
+    background: #00897b;
+  }
+
+  /* ----- Prompt block ----- */
+  pre {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    padding: 14px;
+    border-radius: 6px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0 0 12px 0;
+    font-size: 0.95rem;
+  }
+
+  /* ----- Disclaimer & Footer ----- */
+  .disclaimer {
+    font-size: 0.78rem;
+    color: #555;
+    margin-top: 16px;
+  }
+
   .footer {
-    text-align:center; font-size:0.85rem; color:#777;
-    margin-top:30px; padding-bottom:20px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #555;
+    margin-top: 32px;
+    padding-bottom: 20px;
   }
-  .disclaimer {font-size:0.75rem; color:#555; margin-top:15px;}
 </style>
+
 <script>
   function copyPrompt() {
     const el = document.getElementById('promptText');
     navigator.clipboard.writeText(el.textContent.trim())
       .then(() => alert('Prompt copied to clipboard!'))
-      .catch(() => alert('Failed to copy. Please select manually.'));
+      .catch(() => alert('Copy failed – please select the text manually.'));
   }
 </script>
 </head>
@@ -57,6 +140,7 @@
     </ol>
 
     <button class="copy-btn" onclick="copyPrompt()">Copy</button>
+
     <pre id="promptText">
 You are a positivity‑focused AI. Take the user’s negative or harsh statement and rewrite it as a short,
 uplifting, constructive sentence that keeps the original intent but flips the tone to positive.
